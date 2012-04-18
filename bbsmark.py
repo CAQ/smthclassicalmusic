@@ -71,6 +71,7 @@ try:
     f = open('/home/caq/smthcm/smthcm.config')
     cks = f.readline().strip().split('\t')
     tks = f.readline().strip().split('\t')
+    f.close()
     # consumer_key, consumer_secret
     auth = OAuthHandler(cks[0], cks[1])
     # token, tokenSecret

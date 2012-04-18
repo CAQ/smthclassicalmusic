@@ -1,15 +1,15 @@
 # coding=utf-8
 
-import sys, urllib
+import sys, urllib2
 from weibopy.auth import OAuthHandler
 from weibopy.api import API
 from datetime import datetime
 import time
 
 try:
-    wp = urllib.urlopen('http://www.newsmth.net/nForum/board/classicalmusic')
-    content = wp.read(4000)
-    content = content[0 : content.index('b-content corner')]
+    wp = urllib2.urlopen(urllib2.Request('http://www.newsmth.net/nForum/board/classicalmusic?ajax', headers={"X-Requested-With":"XMLHttpRequest"}))
+    content = wp.read(10000)
+    content = content[0 : content.rindex('b-content')]
     contentutf8 = content.decode('gbk').encode('utf-8')
     ind1 = contentutf8.index('版面积分:')
     ind1 = contentutf8.index(':', ind1)
@@ -21,6 +21,7 @@ try:
     f = open('/home/caq/smthcm/smthcm.config')
     cks = f.readline().strip().split('\t')
     tks = f.readline().strip().split('\t')
+    f.close()
     # consumer_key, consumer_secret
     auth = OAuthHandler(cks[0], cks[1])
     # token, tokenSecret

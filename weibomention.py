@@ -9,18 +9,17 @@ import time
 def retweetit(msg):
     global api, myfriends, retweeted
 
-    if msg.has_key('retweeted_status'):
-        id = str(msg['retweeted_status'].__getattribute__('id'))
-    else:
-        id = str(msg['id'])
-    userid = str(msg['user'].__getattribute__('id'))
+    id = str(msg['id'])
+    userid = msg['user'].__getattribute__('id')
     if userid in myfriends and not id in retweeted:
-        print 'repost', id, msg['text']
-        #api.repost(id, '') ## do not add anything when retweet
+        #print 'repost', id, msg['text']
+        api.repost(id, '') ## do not add anything when retweet
         fw = open('/home/caq/smthcm/retweeted.txt', 'a')
         fw.write(str(id) + '\n')
         fw.close()
-        #time.sleep(2)
+        time.sleep(5)
+    else:
+        print userid, id
 
 try:
     f = open('/home/caq/smthcm/smthcm.config')
@@ -103,6 +102,7 @@ try:
         bbspost += '\n'
 
     if len(combinedweibos) > 0:
+        #print bbspost
         post_data = urllib.urlencode({'id': usrpwd[0], 'passwd': usrpwd[1]})
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
