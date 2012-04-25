@@ -63,8 +63,8 @@ try:
     maincontent = maincontent.replace('  ', ' ')
     maincontent = maincontent.replace('\\/', '/')
     msg += maincontent
-    if len(msg.decode('utf-8')) > 115:
-        msg = msg.decode('utf-8')[0:115].encode('utf-8') # + '…'
+    if len(msg.decode('utf-8')) > 129:
+        msg = msg.decode('utf-8')[0:129].encode('utf-8') # + '…'
     msg = msg + ' ' + thelink
     #print msg
 
