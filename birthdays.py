@@ -38,7 +38,7 @@ f.close()
 post_data = urllib.urlencode({'id': usrpwd[0], 'passwd': usrpwd[1]})
 cj = cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-opener.addheaders = [('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1')]
+opener.addheaders = [('User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/12.0'), ('Referer', 'http://m.newsmth.net/'), ('Host', 'm.newsmth.net')]
 urllib2.install_opener(opener)
 req = urllib2.Request('http://m.newsmth.net/user/login', post_data)
 conn = urllib2.urlopen(req)
@@ -70,7 +70,7 @@ for ddd in dies:
 
 if len(fullcontent) > 0:
     postit(fulltitle, fullcontent)
-#    print fulltitle, fullcontent
+    #print fulltitle, fullcontent
 
 req = urllib2.Request('http://m.newsmth.net/user/logout', post_data)
 conn = urllib2.urlopen(req)

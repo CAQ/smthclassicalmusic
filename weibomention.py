@@ -13,10 +13,10 @@ def retweetit(msg):
     userid = msg['user'].__getattribute__('id')
     if userid in myfriends and not id in retweeted:
         #print 'repost', id, msg['text']
-        api.repost(id, '') ## do not add anything when retweet
-        fw = open('/home/caq/smthcm/retweeted.txt', 'a')
-        fw.write(str(id) + '\n')
-        fw.close()
+        #api.repost(id, '') ## do not add anything when retweet
+        #fw = open('/home/caq/smthcm/retweeted.txt', 'a')
+        #fw.write(str(id) + '\n')
+        #fw.close()
         time.sleep(5)
     else:
         print userid, id
