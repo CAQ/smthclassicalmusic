@@ -15,7 +15,9 @@ try:
     ind1 = contentutf8.index(':', ind1)
     ind2 = contentutf8.index('</span>', ind1)
     boardfund = contentutf8[ind1 + 1 : ind2]
-    print str(datetime.now()) + '\t' + boardfund
+    f = open('/home/caq/smthcm/fundshistory.txt', 'a')
+    f.write(str(datetime.now()) + '\t' + str(boardfund) + '\n')
+    f.close()
     msg = '[' + time.strftime('%H:%M', time.localtime(time.time())) + '] 目前本版积分是' + boardfund + '，感谢版友们的支持，欢迎大家多多灌水，有条件的来捐献积分哦～'
 
     f = open('/home/caq/smthcm/smthcm.config')
