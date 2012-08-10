@@ -1,15 +1,18 @@
 # coding=utf-8
 
 import sys, urllib
-from weibopy.auth import OAuthHandler
-from weibopy.api import API
 import time
 from datetime import date
 import random
+from myauth2 import MyAuth2
 
 randpage = random.randint(0, 69) + 1
 randpost = -1
 try:
+    # init the auth client
+    ma2 = MyAuth2(1193184550)
+
+    # read the page and extract info
     while randpage == 3:
         randpage = random.randint(0, 69) + 1
     #randpage = 69
@@ -41,7 +44,6 @@ try:
         title = t[index5 + 2 : index6 - 2]
         postinfos.append([id, gid, author, thetime, title])
     randpost = random.randint(0, 30) + 1
-    #randpost = 3
     postinfo = postinfos[randpost - 1]
     thelink = 'http://www.newsmth.net/bbscon.php?bid=24&id=' + str(postinfo[0]) + '&ftype=3&num=' + str(randpage * 30 - 30 + randpost)
     msg += postinfo[2] + '于' + str(postinfo[3]) + '发表《' + postinfo[4] + '》：'
@@ -51,7 +53,6 @@ try:
     ind11 = content1utf8.index('prints(')
     ind12 = content1utf8.index('//-->', ind11)
     maincontent = content1utf8[ind11 : ind12]
-    #print maincontent
     ind13 = maincontent.index('发信站')
     ind14 = maincontent.index('\\n\\n', ind13)
     ind15 = maincontent.rindex('※')
@@ -68,17 +69,8 @@ try:
     msg = msg + ' ' + thelink
     #print msg
 
-    f = open('/home/caq/smthcm/smthcm.config')
-    cks = f.readline().strip().split('\t')
-    tks = f.readline().strip().split('\t')
-    f.close()
-    # consumer_key, consumer_secret
-    auth = OAuthHandler(cks[0], cks[1])
-    # token, tokenSecret
-    auth.setToken(tks[0], tks[1])
-    api = API(auth)
-    api.update_status(msg)
+    # post to weibo
+    ma2.client.post.statuses__update(status=msg)
 except:
-    # print 'randpage ' + str(randpage) + ' randpost ' + str(randpost)
     # raise
     pass

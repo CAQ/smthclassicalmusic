@@ -1,12 +1,15 @@
 # coding=utf-8
 
 import sys, urllib2
-from weibopy.auth import OAuthHandler
-from weibopy.api import API
 from datetime import datetime
 import time
+from myauth2 import MyAuth2
 
 try:
+    # init the auth client
+    ma2 = MyAuth2(1193184550)
+
+    # extract funds information from the web page
     wp = urllib2.urlopen(urllib2.Request('http://www.newsmth.net/nForum/board/classicalmusic?ajax', headers={"X-Requested-With":"XMLHttpRequest"}))
     content = wp.read(10000)
     content = content[0 : content.rindex('b-content')]
@@ -20,16 +23,14 @@ try:
     f.close()
     msg = '[' + time.strftime('%H:%M', time.localtime(time.time())) + '] 目前本版积分是' + boardfund + '，感谢版友们的支持，欢迎大家多多灌水，有条件的来捐献积分哦～'
 
+    # store the funds to local file
     f = open('/home/caq/smthcm/smthcm.config')
     cks = f.readline().strip().split('\t')
     tks = f.readline().strip().split('\t')
     f.close()
-    # consumer_key, consumer_secret
-    auth = OAuthHandler(cks[0], cks[1])
-    # token, tokenSecret
-    auth.setToken(tks[0], tks[1])
-    api = API(auth)
-    api.update_status(msg)
+
+    # post to weibo
+    ma2.client.post.statuses__update(status=msg)
 except:
     raise
     # pass

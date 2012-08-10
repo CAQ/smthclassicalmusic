@@ -1,11 +1,14 @@
 # coding=utf-8
 
 import sys, urllib
-from weibopy.auth import OAuthHandler
-from weibopy.api import API
 import time
+from myauth2 import MyAuth2
 
 try:
+    # init the auth client
+    ma2 = MyAuth2(1193184550)
+
+    # extract hot topics from the web page
     wp = urllib.urlopen('http://www.newsmth.net/bbshot.php?board=classicalmusic')
     content = wp.read()
     contentutf8 = content.decode('gb2312').encode('utf-8')
@@ -26,16 +29,8 @@ try:
             msg += posttitle + '(' + postnum + ')' + 'http://www.newsmth.net/bbstcon.php?board=ClassicalMusic&gid=' + postid + ' '
             #print postid, posttitle, postnum
 
-    f = open('/home/caq/smthcm/smthcm.config')
-    cks = f.readline().strip().split('\t')
-    tks = f.readline().strip().split('\t')
-    f.close()
-    # consumer_key, consumer_secret
-    auth = OAuthHandler(cks[0], cks[1])
-    # token, tokenSecret
-    auth.setToken(tks[0], tks[1])
-    api = API(auth)
-    api.update_status(msg)
+    # post to weibo
+    ma2.client.post.statuses__update(status=msg)
 except:
-    # raise
-    pass
+    raise
+    # pass

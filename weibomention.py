@@ -1,16 +1,14 @@
 # coding=utf-8
 
-import urllib, urllib2
-from weibopy.auth import OAuthHandler
-from weibopy.api import API
-import cookielib
+import urllib, urllib2, cookielib
 import time
+from myauth2 import MyAuth2
 
 def retweetit(msg):
-    global api, myfriends, retweeted
+    global myfriends, retweeted
 
     id = str(msg['id'])
-    userid = msg['user'].__getattribute__('id')
+    userid = msg['user']['id']
     if userid in myfriends and not id in retweeted:
         #print 'repost', id, msg['text']
         #api.repost(id, '') ## do not add anything when retweet
@@ -22,16 +20,11 @@ def retweetit(msg):
         print userid, id
 
 try:
-    f = open('/home/caq/smthcm/smthcm.config')
-    cks = f.readline().strip().split('\t')
-    tks = f.readline().strip().split('\t')
-    usrpwd = f.readline().strip().split('\t')
-    f.close()
-    auth = OAuthHandler(cks[0], cks[1])
-    auth.setToken(tks[0], tks[1])
-    api = API(auth)
+    # init the auth client
+    ma2 = MyAuth2(1193184550)
 
-    myfriends = api.friends_ids(count=5000).__dict__['ids']
+    # get the friends id
+    myfriends = ma2.client.get.friendships__friends__ids(count=5000)['ids']
 
     f = open('/home/caq/smthcm/posted.txt') ## for bbs posts
     posted = f.read().splitlines()
@@ -42,12 +35,11 @@ try:
 
     combinedweibos = {} ## key: retweet id, value: messages to post
 
-    for mention in api.mentions(count=100):
-        mentiondict = mention.__dict__
+    for mentiondict in ma2.client.get.statuses__mentions(count=100)['statuses']:
         histext = mentiondict['text'].strip().encode('utf-8')
         if not str(mentiondict['id']) in posted: ## hasn't been posted before
             if mentiondict.has_key('retweeted_status'):
-                id = mentiondict['retweeted_status'].__getattribute__('id')
+                id = mentiondict['retweeted_status']['id']
             else:
                 id = mentiondict['id']
             id = str(id)
@@ -66,9 +58,9 @@ try:
         else: ## he didn't mention me, then there must be a retweeted status
             if not mentiondict.has_key('retweeted_status'):
                 continue
-            rtdict = mentiondict['retweeted_status'].__dict__
+            rtdict = mentiondict['retweeted_status']
             retweettext = rtdict['text'].strip().encode('utf-8')
-            retweetuserid = rtdict['user'].__dict__['id']
+            retweetuserid = rtdict['user']['id']
             if retweetuserid == 2408847334: ## he retweeted my post
                 if len(histext) > len('转发微博。'): ## this retweet is valuable, retweet his post
                     retweetit(mentiondict)
@@ -82,17 +74,17 @@ try:
         rtdict = None
         for msg in combinedweibos[id]:
             if msg.has_key('retweeted_status'):
-                rtdict = msg['retweeted_status'].__dict__
+                rtdict = msg['retweeted_status']
             if str(msg['id']) == str(id):
                 continue
             msgtext = msg['text'].encode('utf-8').strip()
             if msgtext == '转发微博。' or msgtext == '转发微博':
-                pureretweets = '@' + msg['user'].__getattribute__('screen_name').encode('utf-8') + ' '
+                pureretweets = '@' + msg['user']['screen_name'].encode('utf-8') + ' '
             else:
-                comments += '@' + msg['user'].__getattribute__('screen_name').encode('utf-8') + ' 在' + str(msg['created_at']) + '说：' + msgtext + '\n'
+                comments += '@' + msg['user']['screen_name'].encode('utf-8') + ' 在' + str(msg['created_at']) + '说：' + msgtext + '\n'
 
         if rtdict is not None:
-            bbspost += '@' + rtdict['user'].__getattribute__('screen_name').encode('utf-8') + ' 在' + str(rtdict['created_at']) + '发表：' + rtdict['text'].encode('utf-8').strip() + '\n'
+            bbspost += '@' + rtdict['user']['screen_name'].encode('utf-8') + ' 在' + str(rtdict['created_at']) + '发表：' + rtdict['text'].encode('utf-8').strip() + '\n'
         if len(comments) > 0 and len(pureretweets) > 0:
             bbspost += comments + '还被' + pureretweets + '转发了。\n'
         elif len(comments) == 0 and len(pureretweets) > 0:
@@ -102,7 +94,7 @@ try:
         bbspost += '\n'
 
     if len(combinedweibos) > 0:
-        #print bbspost
+        # print bbspost
         post_data = urllib.urlencode({'id': usrpwd[0], 'passwd': usrpwd[1]})
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))

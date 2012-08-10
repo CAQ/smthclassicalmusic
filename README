@@ -3,3 +3,5 @@ For newsmth ClassicalMusic board
 Post funds, hot topics, old marked posts in Weibo
 
 Post musicians in the board
+
+The Weibo OAuth2 auto-renewed helper is from SinaWeiboAuth2, https://github.com/CAQ/SinaWeiboAuth2
