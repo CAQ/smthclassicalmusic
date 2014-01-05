@@ -3,33 +3,59 @@
 import urllib
 import time, os
 from datetime import datetime
-#import random
-#from myauth2 import MyAuth2
 
 
 
-def print_dictionary(dictionary, keys_sorted, translate_keys=None):
+TOTAL_SCORE = 30000
+NOMINATE = {'chunzai':2}
+
+SKIP_AUTHORS = ['CAQ9', 'deliver', 'SYSOP']
+
+
+
+def print_dictionary(dictionary, keys_sorted, translate_keys=None, topk=-1):
+    result = []
+    if topk == 0:
+        return result
     count = 0
     l = len(keys_sorted)
+    lastvalue = None
+    enough = False
     for key in keys_sorted:
         value = dictionary[key]
+        if lastvalue != value and enough:
+            break
+        lastvalue = value
         count += 1
         print '\t', 
         if translate_keys is None:
-            print key,
+            print ('未知' if key is None else key),
+            if key is not None:
+                result.append(key)
         else:
             if key in translate_keys:
                 print translate_keys[key],
+                result.append(translate_keys[key])
             else:
-                print None,
-        print value, '\t', int(count * 10000.0 / l + 0.5) / 100.0, '%'
+                print '未知',
+                #result.append(None)
+        print '\t', value, 
+        if topk > 0:
+            print ''
+            if count >= topk:
+                enough = True
+        else:
+            # print '\t', int(count * 10000.0 / l + 0.5) / 100.0, '%'
+            print ''
+    return result
 
 
-def addone(dictionary, key):
+
+def add_to_dict(dictionary, key, value=1):
     if key in dictionary:
-        dictionary[key] += 1
+        dictionary[key] += value
     else:
-        dictionary[key] = 1
+        dictionary[key] = value
 
 
 
@@ -150,6 +176,9 @@ else:
 # Analysis begins
 
 print filename
+print '********************'
+print '原始数据如下：'
+print
 print '该时期内帖子总数：', len(postinfos)
 
 numposts = {} # author - num of posts
@@ -163,18 +192,18 @@ LONG_THRESHOLD = 100
 for postinfo in postinfos:
     # [postid, gid, author, flag, posttime, title, size, imported, is_tex]
     (postid, gid, author, flag, posttime, title, size, imported, is_tex) = tuple(postinfo)
-    if author not in ['CAQ9', 'deliver', 'SYSOP']:
-        addone(numposts, author)
+    if author not in SKIP_AUTHORS:
+        add_to_dict(numposts, author)
     if postid == gid:
         gid_author[gid] = author
-        if author not in ['CAQ9', 'deliver', 'SYSOP']:
-            addone(originals, author)
+        if author not in SKIP_AUTHORS:
+            add_to_dict(originals, author)
     if flag.find('m') >= 0:
-        if author not in ['CAQ9', 'deliver', 'SYSOP']:
-            addone(markedposts, author)
+        if author not in SKIP_AUTHORS:
+            add_to_dict(markedposts, author)
     if int(size) > LONG_THRESHOLD:
-        if author not in ['CAQ9', 'deliver', 'SYSOP']:
-            addone(longposts, author)
+        if author not in SKIP_AUTHORS:
+            add_to_dict(longposts, author)
 
 original_replies = {} # author - num of posts replied by others
 for postinfo in postinfos:
@@ -182,33 +211,94 @@ for postinfo in postinfos:
     if postid == gid:
         continue
     original_author = gid_author[gid] if gid in gid_author else None
-    if author == original_author:
+    if author == original_author or original_author in SKIP_AUTHORS:
         continue
-    addone(original_replies, original_author)
+    add_to_dict(original_replies, original_author)
 
+
+reward_post = []
 
 numposts_sorted = sorted(numposts, key=lambda x: -numposts[x])
 print '发文数',
 print '（发文作者人数', len(numposts), '）'
-print_dictionary(numposts, numposts_sorted)
+rewarded = print_dictionary(numposts, numposts_sorted, topk=10)
+for r in rewarded:
+    reward_post.append(r)
 
 originals_sorted = sorted(originals, key=lambda x: (-originals[x], x))
 print '原创数',
 print '（原创作者人数', len(originals), '）'
-print_dictionary(originals, originals_sorted)
+rewarded = print_dictionary(originals, originals_sorted, topk=20)
+for r in rewarded:
+    reward_post.append(r)
 
 original_replies_sorted = sorted(original_replies, key=lambda x: -original_replies[x])
 print '发表原创引来的其他人回复数',
 print '（该部分作者人数', len(original_replies), '）'
-print_dictionary(original_replies, original_replies_sorted)
+rewarded = print_dictionary(original_replies, original_replies_sorted, topk=10)
+for r in rewarded:
+    reward_post.append(r)
 
 markedposts_sorted = sorted(markedposts, key=lambda x: -markedposts[x])
 print '被m的帖子数',
 print '（作者人数', len(markedposts), '）'
-print_dictionary(markedposts, markedposts_sorted)
+rewarded = print_dictionary(markedposts, markedposts_sorted)
+for r in rewarded:
+    reward_post.append(r)
 
 longposts_sorted = sorted(longposts, key=lambda x: -longposts[x])
 print '长文数（长度 >', LONG_THRESHOLD, '）',
 print '（该部分作者人数', len(longposts), '）'
-print_dictionary(longposts, longposts_sorted)
+rewarded = print_dictionary(longposts, longposts_sorted, topk=10)
+for r in rewarded:
+    reward_post.append(r)
 
+print '********************'
+print '本次奖励积分数：', TOTAL_SCORE
+print '发帖奖励总人次：', len(reward_post)
+
+nominate_sum = sum(NOMINATE[x] for x in NOMINATE)
+print '提名指标：', nominate_sum
+
+zhuban = []
+f = open('zhuban.txt')
+for line in f:
+    zhuban.append(line.strip())
+f.close()
+print '驻版指标：', 1, '，由', len(zhuban), '人共享'
+
+unit_score = TOTAL_SCORE / (len(reward_post) + nominate_sum + 1)
+print
+print '每个指标', unit_score, '分，',
+
+reward_result = {}
+for r in reward_post:
+    add_to_dict(reward_result, r)
+for r in NOMINATE:
+    add_to_dict(reward_result, r, value=NOMINATE[r])
+for r in zhuban:
+    add_to_dict(reward_result, r, value=(1.0 / len(zhuban)))
+print '奖励共', len(reward_result), '人，名单如下：'
+
+reward_result_sorted = sorted(reward_result, key=lambda x:x.lower())
+total1 = 0
+total2 = 0
+print 'ID\t指标数\t积分'
+for r in reward_result_sorted:
+    value1 = int(reward_result[r] * 100.0 + 0.5) / 100.0
+    value2 = int(reward_result[r] * unit_score)
+    print r, '\t', value1, '\t', value2
+    total1 += value1
+    total2 += value2
+print '总计\t', total1, '\t', total2
+
+
+print '********************'
+print '提名ID\t加权系数'
+for r in NOMINATE:
+    print r, '\t', NOMINATE[r]
+
+print
+print '当前驻版：',
+for r in zhuban:
+    print r,

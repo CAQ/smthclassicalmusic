@@ -1,0 +1,131 @@
+posts/201301-201307.txt
+********************
+原始数据如下：
+
+该时期内帖子总数： 2277
+发文数 （发文作者人数 396 ）
+	Jacqueline 	168 
+	invertebrate 	124 
+	llbird 	98 
+	chunzai 	83 
+	AngelWang 	80 
+	aoiue 	77 
+	defeatyou 	76 
+	dutthu 	72 
+	confinement 	62 
+	CAQ 	53 
+原创数 （原创作者人数 121 ）
+	defeatyou 	22 
+	Jacqueline 	9 
+	facebook123 	4 
+	metch 	4 
+	mjxian 	4 
+	OOpPPppPPppb 	3 
+	Orzz 	3 
+	bajibaji 	3 
+	reoiw 	3 
+	wellliu127 	3 
+	welmet 	3 
+	Lugh 	2 
+	MQ0708 	2 
+	NeymarFans 	2 
+	chncpa 	2 
+	chuangye2011 	2 
+	chunzai 	2 
+	ciga 	2 
+	hackerboy 	2 
+	hgoldfish 	2 
+	ingridlee 	2 
+	pengzhanglv 	2 
+	rendao 	2 
+	tmech 	2 
+	y1984 	2 
+发表原创引来的其他人回复数 （该部分作者人数 85 ）
+	y1984 	746 
+	joylove1974 	137 
+	defeatyou 	102 
+	Qlisa 	68 
+	Jacqueline 	65 
+	未知 	43 
+	bustling 	33 
+	welmet 	27 
+	pengzhanglv 	24 
+	one9 	24 
+被m的帖子数 （作者人数 5 ）
+	invertebrate 	2 
+	warranty 	1 
+	Jacqueline 	1 
+	StarryNight9 	1 
+	llbird 	1 
+长文数（长度 > 100 ） （该部分作者人数 138 ）
+	llbird 	84 
+	dutthu 	48 
+	invertebrate 	46 
+	confinement 	41 
+	Jacqueline 	33 
+	MQ0708 	26 
+	aoiue 	24 
+	chunzai 	23 
+	joylove1974 	17 
+	AngelWang 	15 
+********************
+本次奖励积分数： 30000
+发帖奖励总人次： 59
+提名指标： 2
+驻版指标： 1 ，由 14 人共享
+
+每个指标 483 分， 奖励共 47 人，名单如下：
+ID	指标数	积分
+AngelWang 	2.07 	1000
+aoiue 	2.07 	1000
+bajibaji 	1.0 	483
+bustling 	1.0 	483
+CAQ 	1.07 	517
+chncpa 	1.0 	483
+christies 	0.07 	34
+chuangye2011 	1.0 	483
+chunzai 	5.0 	2415
+ciga 	1.0 	483
+confinement 	2.0 	966
+cts 	0.07 	34
+defeatyou 	3.0 	1449
+DonGiovanni 	0.07 	34
+dongwenxuan 	0.07 	34
+DonJuan 	0.07 	34
+dutthu 	2.0 	966
+facebook123 	1.0 	483
+hackerboy 	1.0 	483
+HansSachs 	0.07 	34
+hgoldfish 	1.0 	483
+ingridlee 	1.0 	483
+invertebrate 	3.07 	1483
+Jacqueline 	5.07 	2449
+joylove1974 	2.0 	966
+llbird 	3.0 	1449
+Lugh 	1.0 	483
+metch 	1.0 	483
+mjxian 	1.0 	483
+MQ0708 	2.0 	966
+NetHorse 	0.07 	34
+NeymarFans 	1.0 	483
+one9 	1.0 	483
+OOpPPppPPppb 	1.0 	483
+Orzz 	1.0 	483
+pengzhanglv 	2.0 	966
+Qlisa 	1.0 	483
+rendao 	1.0 	483
+reoiw 	1.0 	483
+StarryNight9 	1.0 	483
+sunnycougar 	0.07 	34
+tmech 	1.0 	483
+warranty 	1.0 	483
+wellliu127 	1.0 	483
+welmet 	2.0 	966
+y1984 	2.0 	966
+yuanlee 	0.07 	34
+总计	61.98 	29939
+********************
+提名ID	加权系数
+chunzai 	2
+
+当前驻版： DonGiovanni DonJuan yuanlee aoiue NetHorse christies CAQ Jacqueline sunnycougar cts dongwenxuan invertebrate HansSachs AngelWang
