@@ -16,21 +16,28 @@ try:
     ind2 = contentutf8.index(');', ind1)
     hotcontent = contentutf8[ind1 + 16 : ind2]
     hots = hotcontent.split('\n')
-    msg = '[' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())) + ']热门话题：'
+    timestr = '[' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())) + ']'
+    msg = timestr + '热门话题：'
+    hashot = False
     for ahot in hots:
-        if ahot.startswith('['):
-            t = ahot.strip()
-            t = t[1 : len(t) - 2]
-            index1 = t.index(',')
-            index2 = t.rindex(',')
-            postid = t[0 : index1]
-            posttitle = t[index1 + 3 : index2 - 2]
-            postnum = t[index2 + 2 : len(t)]
-            msg += posttitle + '(' + postnum + ')' + 'http://www.newsmth.net/bbstcon.php?board=ClassicalMusic&gid=' + postid + ' '
-            #print postid, posttitle, postnum
+        if not ahot.startswith('['):
+            continue
+        t = ahot.strip()
+        t = t[1 : len(t) - 2]
+        index1 = t.index(',')
+        index2 = t.rindex(',')
+        postid = t[0 : index1]
+        posttitle = t[index1 + 3 : index2 - 2]
+        postnum = t[index2 + 2 : len(t)]
+        msg += posttitle + '(' + postnum + ')' + 'http://www.newsmth.net/bbstcon.php?board=ClassicalMusic&gid=' + postid + ' '
+        #print postid, posttitle, postnum
+        hashot = True
 
     # post to weibo
-    ma2.client.post.statuses__update(status=msg)
+    if hashot:
+        ma2.client.post.statuses__update(status=msg)
+    else:
+        ma2.client.post.statuses__update(status='现在没有热门话题哟，快来灌水吧！ http://classicalmusic.board.newsmth.net/')
 except:
-    raise
-    # pass
+    #raise
+    pass
